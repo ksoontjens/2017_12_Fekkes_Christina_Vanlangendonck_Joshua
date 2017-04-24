@@ -1,7 +1,7 @@
-package hellotvxlet;
+package hellotvxle;
 
 import java.awt.event.ActionEvent;
-import javax.tv.xlet.*;
+/*import java.awt.event.ActionEvent;*/import javax.tv.xlet.*;
 import org.dvb.event.EventManager;
 import org.dvb.event.UserEventRepository;
 import org.havi.ui.HScene;
@@ -16,7 +16,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
         
     }
 
-    public void initXlet(XletContext context) { //720 x 576
+    public void initXlet(XletContext context) { //720 x 576 (make smaller later)
       scene=HSceneFactory.getInstance().getDefaultHScene();
       ChessBoard bord=new ChessBoard();
          UserEventRepository repo=new UserEventRepository("repo");
@@ -42,7 +42,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
     }
 
     public void actionPerformed(ActionEvent arg0) {
-       
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
         
     }

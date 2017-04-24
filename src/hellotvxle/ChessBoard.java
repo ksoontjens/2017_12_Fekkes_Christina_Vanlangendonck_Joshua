@@ -3,14 +3,13 @@
  * and open the template in the editor.
  */
 
-package hellotvxlet;
+package hellotvxle;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import org.bluray.ui.event.HRcEvent;
 import org.dvb.event.UserEvent;
 import org.dvb.event.UserEventListener;
-import org.dvb.event.UserEventRepository;
 import org.havi.ui.HComponent;
 
 /**
