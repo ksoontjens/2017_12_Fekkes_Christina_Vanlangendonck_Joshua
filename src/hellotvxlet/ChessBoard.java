@@ -50,7 +50,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
     public void userEventReceived(UserEvent e) {
        if (e.getType()==HRcEvent.KEY_PRESSED)
        {
-           // Test Christina
            if (e.getCode()==HRcEvent.VK_RIGHT) curx++; //als je pijltje naar rechts druk, volgend vak
            else if (e.getCode()==HRcEvent.VK_LEFT) curx--;
            else if (e.getCode()==HRcEvent.VK_DOWN) cury++;
