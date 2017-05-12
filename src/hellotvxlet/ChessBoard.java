@@ -19,37 +19,40 @@ import org.havi.ui.HComponent;
  */
 public class ChessBoard extends HComponent implements UserEventListener {
 
-    int xoff=100; //offset vakje (breedte)
-    int yoff=100;
+    int xoff=50; //offset vakje (breedte)
+    int yoff=50;
     
     int curx=0; //welk vakje x je bent
     int cury=0; //vakje y
     
-    int[][] bordArray = new int[8][8];
+    int[][] bordArray = new int[10][10];
+    boolean taken = false;
     
     public ChessBoard()
     {
         this.setBounds(0,0,720,576); // full screen
-        for(int i = 0; i<bordArray.length; i++) {
+        for(int i = 0; i<bordArray.length; i++) { //dit vult de array bij start
             for(int j = 0; j<bordArray.length; j++) {
-            if(i<4 || j>6) {
-                bordArray[i][j] = 1;
+                if(i<4 || i>5) {
+                    if ((i+j)%2==1) {
+                        bordArray[j][i] = 1;//zet damstukjes op juiste plaats
+                    } 
+                }
+                else{
+                    bordArray[j][i] = 0;
+                }
             }
-            else{
-                bordArray[i][j] = 0;
-            }
-        }
         }
     }
     
     public void paint(Graphics g)
     {
-        for (int x=0;x<8;x++)
+        for (int x=0;x<10;x++)
         {
-            for (int y=0;y<8;y++)
+            for (int y=0;y<10;y++)
             {
                 if ((x+y)%2==0) {
-                    g.setColor(Color.BLACK);
+                    g.setColor(Color.WHITE);
                     g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
                     if(bordArray[x][y] == 1) {
                         g.setColor(Color.BLUE);
@@ -58,10 +61,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                     }
                     else {
                         
-                    }
-                    g.setColor(Color.WHITE);
-                    g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
-                    
+                    } 
                 }
                 else {
                     g.setColor(Color.BLACK);
@@ -74,16 +74,11 @@ public class ChessBoard extends HComponent implements UserEventListener {
                     else {
                         
                     }
-                    
-                }
-                
-                
-                
-                
+                } 
             }
                 
         }
-        g.setColor(Color.BLUE);
+        g.setColor(Color.RED);
         g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50); //teken selectievakje
     }
 
@@ -94,7 +89,18 @@ public class ChessBoard extends HComponent implements UserEventListener {
            else if (e.getCode()==HRcEvent.VK_LEFT) curx--;
            else if (e.getCode()==HRcEvent.VK_DOWN) cury++;
            else if (e.getCode()==HRcEvent.VK_UP) cury--;
-           
+           else if (e.getCode()==HRcEvent.VK_1) {
+               //System.out.println(curx);
+               bordArray[curx][cury] = 0;
+               taken = true;
+           }
+           else if (e.getCode()==HRcEvent.VK_2) {
+               if(taken){
+                   bordArray[curx][cury] = 1;
+                   taken = false;
+               }
+               else{} 
+           }
            this.repaint();
        }
     }
