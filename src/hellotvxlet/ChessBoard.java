@@ -26,7 +26,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     public ChessBoard()
     {
-        this.setBounds(0,0,720,576); // full screen
+        //this.setBounds(0,0,720,576); // full screen720,576);
+        this.setBounds(0,0,720, 576);
     }
     
     public void paint(Graphics g)
@@ -38,13 +39,15 @@ public class ChessBoard extends HComponent implements UserEventListener {
                 if ((x+y)%2==0) g.setColor(Color.WHITE); 
                 else g.setColor(Color.BLACK);
                 
-                g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
+                //g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
+                g.fillRect(x*70, y*70, 70,70);
 
             }
                 
         }
         g.setColor(Color.BLUE);
-        g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50);
+        //g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50);
+        g.drawRect(curx*70, cury*70, 70,70);
     }
 
     public void userEventReceived(UserEvent e) {
