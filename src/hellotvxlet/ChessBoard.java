@@ -32,22 +32,21 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     public void paint(Graphics g)
     {
-        for (int x=0;x<8;x++)
+        for (int x=0;x<10;x++)
         {
-            for (int y=0;y<8;y++)
+            for (int y=0;y<10;y++)
             {
                 if ((x+y)%2==0) g.setColor(Color.WHITE); 
                 else g.setColor(Color.BLACK);
                 
                 //g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
-                g.fillRect(x*70, y*70, 70,70);
-
-            }
-                
+                g.fillRect(x*50, y*50, 50,50);
+            }     
         }
+        
         g.setColor(Color.BLUE);
         //g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50);
-        g.drawRect(curx*70, cury*70, 70,70);
+        g.drawRect(curx*50, cury*50, 50,50);
     }
 
     public void userEventReceived(UserEvent e) {
