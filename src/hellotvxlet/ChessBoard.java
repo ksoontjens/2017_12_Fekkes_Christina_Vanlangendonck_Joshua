@@ -62,9 +62,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         //g.setColor(Color.WHITE);
                     }
-                    else {
-                        
-                    } 
+                    else { } 
                 }
                 else {
                     g.setColor(Color.BLACK);
@@ -74,12 +72,9 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         //g.setColor(Color.WHITE);
                     }
-                    else {
-                        
-                    }
+                    else {  }
                 } 
-            }
-                
+            }     
         }
         g.setColor(Color.RED);
         g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50); //teken selectievakje
@@ -93,7 +88,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
            else if (e.getCode()==HRcEvent.VK_DOWN) cury++;
            else if (e.getCode()==HRcEvent.VK_UP) cury--;
            
-           else if (e.getCode()==HRcEvent.VK_1 && taken != true) {//als je f1 drukt opnemen, maar 1 tegelijk
+           else if (e.getCode()==HRcEvent.VK_1 && taken != true && allowedToTake() == true) {//als je f1 drukt opnemen, maar 1 tegelijk
                //System.out.println(curx);
                bordArray[curx][cury] = 0;
                taken = true;
@@ -104,7 +99,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
            //werkend voor player1. Ook onderscheid nodig zodat player1 geen blokjes van 2 kan verplaatsen.
            else if (e.getCode()==HRcEvent.VK_2) {//als je f2 drukt dam terugleggen
                System.out.println(cury);
-               if(taken && curx == takenX+1 && cury == takenY+1){
+               if(taken && allowedToDrop() == true){
                    bordArray[curx][cury] = 1;
                    taken = false;
                }
@@ -112,5 +107,24 @@ public class ChessBoard extends HComponent implements UserEventListener {
            }
            this.repaint();
        }
+    }
+    
+    public boolean allowedToDrop() {
+        if(curx == takenX+1 && cury == takenY+1 || curx == takenX-1 && cury == takenY+1){ 
+            //als je 1 naar voor gaat en 1 naar L or R -> allowed
+            if(bordArray[curx][cury] == 0) { //als er nog geen blokje staat
+                return true;
+            }
+            else{return false;}      
+        }
+        else{return false;}
+    }
+    
+    public boolean allowedToTake() { // als er een plaats vrij is
+        //nog uitzondering voor zijkanten toevoegen (out of range)
+        if(bordArray[curx+1][cury+1] == 0 || bordArray[curx-1][cury+1] == 0){
+                   return true;
+        }
+        else{return false;}
     }
 }
