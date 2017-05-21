@@ -25,6 +25,9 @@ public class ChessBoard extends HComponent implements UserEventListener {
     int curx=0; //welk vakje x je bent
     int cury=0; //vakje y
     
+    int takenX; //onthouden waar de steen genomen is
+    int takenY;
+    
     int[][] bordArray = new int[10][10];
     boolean taken = false;
     
@@ -89,13 +92,19 @@ public class ChessBoard extends HComponent implements UserEventListener {
            else if (e.getCode()==HRcEvent.VK_LEFT) curx--;
            else if (e.getCode()==HRcEvent.VK_DOWN) cury++;
            else if (e.getCode()==HRcEvent.VK_UP) cury--;
-           else if (e.getCode()==HRcEvent.VK_1) {
+           
+           else if (e.getCode()==HRcEvent.VK_1 && taken != true) {//als je f1 drukt opnemen, maar 1 tegelijk
                //System.out.println(curx);
                bordArray[curx][cury] = 0;
                taken = true;
-           }
-           else if (e.getCode()==HRcEvent.VK_2) {
-               if(taken){
+               takenX = curx;
+               takenY = cury;
+           }// we gaan een ondersheid moeten maken tussen player 1 die boven begint en 
+           //player 2 onderaan, want nu is de check voor waar je de blokjes mag neerzetten alleen
+           //werkend voor player1. Ook onderscheid nodig zodat player1 geen blokjes van 2 kan verplaatsen.
+           else if (e.getCode()==HRcEvent.VK_2) {//als je f2 drukt dam terugleggen
+               System.out.println(cury);
+               if(taken && curx == takenX+1 && cury == takenY+1){
                    bordArray[curx][cury] = 1;
                    taken = false;
                }
