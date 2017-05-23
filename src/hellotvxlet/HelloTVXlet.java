@@ -21,6 +21,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
       ChessBoard bord=new ChessBoard();
          UserEventRepository repo=new UserEventRepository("repo");
          repo.addAllArrowKeys();
+         repo.addAllNumericKeys();
      EventManager man=EventManager.getInstance();
      man.addUserEventListener(bord, repo);
      
@@ -30,7 +31,7 @@ public class HelloTVXlet implements Xlet, HActionListener {
     }
 
     public void startXlet() {
-  
+       
     }
 
     public void pauseXlet() {

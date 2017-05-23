@@ -28,21 +28,34 @@ public class ChessBoard extends HComponent implements UserEventListener {
     int takenX; //onthouden waar de steen genomen is
     int takenY;
     
-    int[][] bordArray = new int[10][10];
+    int[][] player1Array = new int[10][10];
+    int[][] player2Array = new int[10][10];
     boolean taken = false;
+    
+    int turnPlayer = 1;
     
     public ChessBoard()
     {
         this.setBounds(0,0,720,576); // full screen
-        for(int i = 0; i<bordArray.length; i++) { //dit vult de array bij start
-            for(int j = 0; j<bordArray.length; j++) {
-                if(i<4 || i>5) {
-                    if ((i+j)%2==1) {
-                        bordArray[j][i] = 1;//zet damstukjes op juiste plaats
-                    } 
-                }
-                else{
-                    bordArray[j][i] = 0;
+        for(int x = 0; x<player1Array.length; x++) { //dit vult de array bij start
+            for(int y = 0; y<player1Array.length; y++) {
+                if ((x+y)%2==1) {
+                   if(x<4)
+                   {
+                       player1Array[y][x] = 1;//zet damstukjes op juiste plaats
+                       player2Array[y][x] = 0;
+                    
+                   }
+                   else if(x>5)
+                   {
+                       player1Array[y][x] = 0;
+                       player2Array[y][x] = 1;
+                   }
+                   else
+                   {
+                       player1Array[y][x]=0;
+                       player2Array[y][x]=0;
+                   }
                 }
             }
         }
@@ -57,30 +70,54 @@ public class ChessBoard extends HComponent implements UserEventListener {
                 if ((x+y)%2==0) {
                     g.setColor(Color.WHITE);
                     g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
-                    if(bordArray[x][y] == 1) {
+                    if(player1Array[x][y] == 1) {
                         g.setColor(Color.BLUE);
                         g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         //g.setColor(Color.WHITE);
+                    }
+                    else if(player2Array[x][y] ==1)
+                    {
+                        g.setColor(Color.RED);
+                        g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                     }
                     else { } 
                 }
                 else {
                     g.setColor(Color.BLACK);
                     g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
-                    if(bordArray[x][y] == 1) {
+                    if(player1Array[x][y] == 1) {
                         g.setColor(Color.BLUE);
                         g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         //g.setColor(Color.WHITE);
+                    }
+                    else if(player2Array[x][y] ==1)
+                    {
+                       g.setColor(Color.RED);
+                       g.fillOval((x*50+xoff), y*50+xoff, 40, 40);
                     }
                     else {  }
                 } 
             }     
         }
-        g.setColor(Color.RED);
+        g.setColor(Color.GREEN);
         g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50); //teken selectievakje
     }
-
+    
+    public void switchPlayer()
+    {
+      if(turnPlayer == 1){
+        System.out.println("Turn for player 2");
+        turnPlayer = 2;
+      }
+        
+      else{
+        System.out.println("Turn for player 1");
+        turnPlayer = 1;
+      }
+    }
+    
     public void userEventReceived(UserEvent e) {
+      
        if (e.getType()==HRcEvent.KEY_PRESSED)
        {
            if (e.getCode()==HRcEvent.VK_RIGHT) curx++; //als je pijltje naar rechts druk, volgend vak
@@ -88,23 +125,125 @@ public class ChessBoard extends HComponent implements UserEventListener {
            else if (e.getCode()==HRcEvent.VK_DOWN) cury++;
            else if (e.getCode()==HRcEvent.VK_UP) cury--;
            
-           else if (e.getCode()==HRcEvent.VK_1 && taken != true && allowedToTake() == true) {//als je f1 drukt opnemen, maar 1 tegelijk
-               //System.out.println(curx);
-               bordArray[curx][cury] = 0;
-               taken = true;
-               takenX = curx;
-               takenY = cury;
-           }// we gaan een ondersheid moeten maken tussen player 1 die boven begint en 
-           //player 2 onderaan, want nu is de check voor waar je de blokjes mag neerzetten alleen
-           //werkend voor player1. Ook onderscheid nodig zodat player1 geen blokjes van 2 kan verplaatsen.
-           else if (e.getCode()==HRcEvent.VK_2) {//als je f2 drukt dam terugleggen
-               System.out.println(cury);
-               if(taken && allowedToDrop() == true){
-                   bordArray[curx][cury] = 1;
-                   taken = false;
+           else if(e.getCode()==HRcEvent.VK_1 && taken == false)
+           {
+               if(turnPlayer==1)
+               { // player 1 turn
+                  if(player1Array[curx][cury]==1)
+                  {
+                      System.out.println("BEZET");
+                      player1Array[curx][cury] = 0;
+                      taken = true;
+                      takenX = curx;
+                      takenY = cury;
+                      System.out.println("taken == true");
+                  }
+                  else
+                  {
+                      System.out.println("NIET BEZET");
+                  }
                }
-               else{} 
+               else
+               { // player 2 turn
+                   if(player2Array[curx][cury]==1)
+                  {
+                      System.out.println("BEZET");
+                      player2Array[curx][cury] = 0;
+                      taken = true;
+                      takenX = curx;
+                      takenY = cury;
+                      System.out.println("taken == true");
+                  }
+                  else
+                  {
+                      System.out.println("NIET BEZET");
+                  }
+               }
            }
+           else if(e.getCode()==HRcEvent.VK_2 && taken==true)
+           {
+               if(turnPlayer==1)
+               {
+                   // Niet buiten het veld en er het veld moet leeg zijn
+                   if(curx < 10 && curx >= 0 && cury < 10 && player1Array[curx][cury]==0 && player2Array[curx][cury]==0)
+                   {
+                       if(curx==takenX && cury==takenY+1) // Damstuk 1 stap naar voor zetten
+                       {
+                           player1Array[curx][cury] = 1;
+                           taken = false;
+                           System.out.println("taken == false");
+                           switchPlayer();
+                       }
+                       else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
+                       {
+                           player1Array[curx][cury] = 1;
+                           taken = false;
+                       }
+                       else if(curx==takenX+2 && cury==takenY+2) // Rechts onder slaan
+                       {
+                           if(player2Array[takenX+1][takenY+1]==1) // Als je een stuk van de tegenstander kan slaan
+                           {
+                               player2Array[takenX+1][takenY+1]=0;
+                               player1Array[curx][cury] = 1;
+                               taken = false;   
+                               switchPlayer();
+                           }
+                       }
+                       else if(curx==takenX-2 && cury==takenY+2) // Links onder slaan
+                       {
+                           if(player2Array[takenX-1][takenY+1]==1) // Als je een stuk van de tegenstander kan slaan
+                           {
+                               player2Array[takenX-1][takenY+1]=0;
+                               player1Array[curx][cury] = 1;
+                               taken = false; 
+                               switchPlayer();
+                           }
+                           
+                       }
+                   } 
+               }
+               else if(turnPlayer==2)
+               {
+                    // Niet buiten het veld en er het veld moet leeg zijn
+                   if(curx >= 0 && curx < 10 && cury >=0 && player1Array[curx][cury]==0 && player2Array[curx][cury]==0)
+                   {
+                       if(curx==takenX && cury==takenY-1) // Damstuk 1 stap naar voor zetten
+                       {
+                           player2Array[curx][cury] = 1;
+                           taken = false;
+                           System.out.println("taken == false");
+                           switchPlayer();
+                       }
+                       else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
+                       {
+                           player2Array[curx][cury] = 1;
+                           taken = false;
+                       }
+                       else if(curx==takenX-2 && cury==takenY-2) // Links boven slaan
+                       {
+                           if(player1Array[takenX-1][takenY-1]==1) // Als je een stuk van de tegenstander kan slaan
+                           {
+                               player1Array[takenX-1][takenY-1]=0;
+                               player2Array[curx][cury] = 1;
+                               taken = false;   
+                               switchPlayer();
+                           }
+                       }
+                       else if(curx==takenX+2 && cury==takenY-2) // Rechts boven slaan
+                       {
+                           if(player1Array[takenX+1][takenY-1]==1) // Als je een stuk van de tegenstander kan slaan
+                           {
+                               player1Array[takenX+1][takenY-1]=0;
+                               player2Array[curx][cury] = 1;
+                               taken = false; 
+                               switchPlayer();
+                           }
+                           
+                       }
+                   } 
+               }
+           }
+           
            this.repaint();
        }
     }
@@ -112,7 +251,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
     public boolean allowedToDrop() {
         if(curx == takenX+1 && cury == takenY+1 || curx == takenX-1 && cury == takenY+1){ 
             //als je 1 naar voor gaat en 1 naar L or R -> allowed
-            if(bordArray[curx][cury] == 0) { //als er nog geen blokje staat
+            if(player1Array[curx][cury] == 0) { //als er nog geen blokje staat
                 return true;
             }
             else{return false;}      
@@ -122,7 +261,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     public boolean allowedToTake() { // als er een plaats vrij is
         //nog uitzondering voor zijkanten toevoegen (out of range)
-        if(bordArray[curx+1][cury+1] == 0 || bordArray[curx-1][cury+1] == 0){
+        
+        if(player1Array[curx+1][cury+1] == 0 || player1Array[curx-1][cury+1] == 0){
                    return true;
         }
         else{return false;}
