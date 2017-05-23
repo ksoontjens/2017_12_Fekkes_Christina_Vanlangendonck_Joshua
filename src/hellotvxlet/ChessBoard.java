@@ -136,7 +136,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                       taken = true;
                       takenX = curx;
                       takenY = cury;
-                      System.out.println("taken == true");
                   }
                   else
                   {
@@ -152,7 +151,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                       taken = true;
                       takenX = curx;
                       takenY = cury;
-                      System.out.println("taken == true");
                   }
                   else
                   {
@@ -171,7 +169,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        {
                            player1Array[curx][cury] = 1;
                            taken = false;
-                           System.out.println("taken == false");
                            switchPlayer();
                        }
                        else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
@@ -186,6 +183,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                                player2Array[takenX+1][takenY+1]=0;
                                player1Array[curx][cury] = 1;
                                taken = false;
+                               System.out.println("Player 1 mag nog eens want hij heeft geslagen.");
                            }
                        }
                        else if(curx==takenX-2 && cury==takenY+2) // Links onder slaan
@@ -195,6 +193,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                                player2Array[takenX-1][takenY+1]=0;
                                player1Array[curx][cury] = 1;
                                taken = false;
+                               System.out.println("Player 1 mag nog eens want hij heeft geslagen.");
                            }
                        }
                    } 
@@ -208,7 +207,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        {
                            player2Array[curx][cury] = 1;
                            taken = false;
-                           System.out.println("taken == false");
                            switchPlayer();
                        }
                        else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
@@ -223,6 +221,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                                player1Array[takenX-1][takenY-1]=0;
                                player2Array[curx][cury] = 1;
                                taken = false;
+                               System.out.println("Player 2 mag nog eens want hij heeft geslagen.");
                            }
                        }
                        else if(curx==takenX+2 && cury==takenY-2) // Rechts boven slaan
@@ -232,6 +231,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                                player1Array[takenX+1][takenY-1]=0;
                                player2Array[curx][cury] = 1;
                                taken = false;
+                               System.out.println("Player 2 mag nog eens want hij heeft geslagen.");
                            }
                            
                        }
