@@ -185,8 +185,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                            {
                                player2Array[takenX+1][takenY+1]=0;
                                player1Array[curx][cury] = 1;
-                               taken = false;   
-                               switchPlayer();
+                               taken = false;
                            }
                        }
                        else if(curx==takenX-2 && cury==takenY+2) // Links onder slaan
@@ -195,10 +194,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
                            {
                                player2Array[takenX-1][takenY+1]=0;
                                player1Array[curx][cury] = 1;
-                               taken = false; 
-                               switchPlayer();
+                               taken = false;
                            }
-                           
                        }
                    } 
                }
@@ -225,8 +222,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                            {
                                player1Array[takenX-1][takenY-1]=0;
                                player2Array[curx][cury] = 1;
-                               taken = false;   
-                               switchPlayer();
+                               taken = false;
                            }
                        }
                        else if(curx==takenX+2 && cury==takenY-2) // Rechts boven slaan
@@ -235,8 +231,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                            {
                                player1Array[takenX+1][takenY-1]=0;
                                player2Array[curx][cury] = 1;
-                               taken = false; 
-                               switchPlayer();
+                               taken = false;
                            }
                            
                        }
