@@ -347,6 +347,19 @@ public class ChessBoard extends HComponent implements UserEventListener {
         }
     }
     
+    public boolean freeSpaceAroundPiece(int x, int y)
+    {
+        if(player1Array[x-1][y-1]==1 || player1Array[x+1][y+1]==1 || player1Array[x+1][y-1]==1 || player1Array[x-1][y+1]==1)
+        {
+            return false;
+        }
+        else if(player2Array[x-1][y-1]==1 || player2Array[x+1][y+1]==1 || player2Array[x+1][y-1]==1 || player2Array[x-1][y+1]==1)
+        {
+            return false;
+        }
+        return true;
+    }
+    
     public void moves(int[][] ownArray, int[][] opponentArray, int offset)
     {
        //System.out.println("takenX: " + takenX);
@@ -364,12 +377,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
            if(canHit) // je moet slaan
            {
                System.out.println("SLAAN IS VERPLICHT! U KUNT SLAAN!");
-               if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
-               {
-                   ownArray[curx][cury] = 1;
-                   taken = false;
-               }
-               else if(curx==takenX+2 && cury==takenY+2) // Rechts onder slaan
+               if(curx==takenX+2 && cury==takenY+2) // Rechts onder slaan
                {
                    if(opponentArray[takenX+1][takenY+1]==1) // Als je een stuk van de tegenstander kan slaan
                    {
@@ -418,6 +426,13 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        cleanMoveArray();
                    }
                }
+               
+               // Als de speler niet meer verder kan slaan is de beurt aan de tegenstander
+               canHit(ownArray, opponentArray);
+               if(canHit == false)
+               {
+                   switchPlayer();
+               }
            }
            else // 1 schuine stap zetten
            {
@@ -443,8 +458,13 @@ public class ChessBoard extends HComponent implements UserEventListener {
                }
                else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
                {
-                   ownArray[curx][cury] = 1;
-                   taken = false;
+                   // TODO: kan enkel als er echt geen andere zetten zijn met die steen
+                   //System.out.println("CAANHIIT: " + canHit);
+                   //if(freeSpaceAroundPiece(curx,cury) || canHit)
+                   //{
+                       ownArray[curx][cury] = 1;
+                       taken = false;
+                   //}
                }
            } 
        } 
