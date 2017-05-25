@@ -1,5 +1,6 @@
 package hellotvxlet;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 /*import java.awt.event.ActionEvent;*/import javax.tv.xlet.*;
 import org.dvb.event.EventManager;
@@ -7,12 +8,12 @@ import org.dvb.event.UserEventRepository;
 import org.havi.ui.HScene;
 import org.havi.ui.HSceneFactory;
 import org.havi.ui.HStaticText;
-import org.havi.ui.HText;
+import org.havi.ui.HComponent;
 import org.havi.ui.event.HActionListener;
 import org.havi.ui.HVisible;
 
 
-public class HelloTVXlet implements Xlet, HActionListener {
+public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
 
     HScene scene;
     

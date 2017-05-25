@@ -12,6 +12,7 @@ import org.bluray.ui.event.HRcEvent;
 import org.dvb.event.UserEvent;
 import org.dvb.event.UserEventListener;
 import org.havi.ui.HComponent;
+import java.awt.Image;
 
 /**
  *
@@ -27,6 +28,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     int takenX; // onthouden waar de steen genomen is
     int takenY;
+    
+    Image Player1;
+    Image Player2;
+ 
     private HelloTVXlet helloTvXlet = new HelloTVXlet();
     
     // Alle stenen van de speler
@@ -46,6 +51,11 @@ public class ChessBoard extends HComponent implements UserEventListener {
     // Damstenen worden in juiste array geplaatst
     public ChessBoard()
     {
+        Player1=this.getToolkit().getImage("player1.png");
+        System.out.println(Player1.getHeight(this));//laten staan anders werkt het niet, zeer vreemd
+        Player2=this.getToolkit().getImage("player2.png");
+        System.out.println(Player2.getHeight(this));//laten staan anders werkt het niet, zeer vreemd
+        
         this.setBounds(0,0,720,576); // full screen
         for(int x = 0; x<player1Array.length; x++) { //dit vult de array bij start
             for(int y = 0; y<player1Array.length; y++) {
@@ -79,6 +89,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
     public void paint(Graphics g)
     {
         System.out.println("================== PAINT ===================");
+
+        g.drawImage(Player1, 610, 50,null);
+        g.drawImage(Player2, 610, 350,null);
+        
         for (int x=0;x<10;x++)
         {
             for (int y=0;y<10;y++)
