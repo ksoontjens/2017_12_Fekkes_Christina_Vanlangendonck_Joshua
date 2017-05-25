@@ -39,10 +39,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
     boolean hit = false; // om score van de speler te verhogen, wordt tot nu toe nog niks mee gedaan
     boolean canHit = false; // om te checken of te speler aan beurt kan slaan, is verplicht
     
-    boolean pressEnter = false;
-    
     int turnPlayer = 1; // speler die aan beurt is, kan 1 of 2 zijn
     
+    // Board set-up
+    // Damstenen worden in juiste array geplaatst
     public ChessBoard()
     {
         this.setBounds(0,0,720,576); // full screen
@@ -71,17 +71,11 @@ public class ChessBoard extends HComponent implements UserEventListener {
 
     }
     
-    public void cleanMoveArray()
-    {
-        for(int x=0; x < moveArray.length; x++)
-        {
-            for(int y = 0; y < moveArray.length; y++)
-            {
-                moveArray[x][y] = 0;
-            }
-        }
-    }
-    
+    /* Vakjes van het bord krijgen de juiste kleur: wit of zwart
+     * Damstenen krijgen de juiste kleur: blauw, rood of geel
+     * Blauw: player 1
+     * Rood: player 2
+     * Geel: stenen die geslagen kunnen worden */
     public void paint(Graphics g)
     {
         System.out.println("================== PAINT ===================");
@@ -89,90 +83,60 @@ public class ChessBoard extends HComponent implements UserEventListener {
         {
             for (int y=0;y<10;y++)
             {
-                if ((x+y)%2==0) {
+                if ((x+y)%2==0) { // Witte velden
                     g.setColor(Color.WHITE);
                     g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
+                    
                     if(player1Array[x][y] == 1) {
-                        if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
-                        {
-                            System.out.println("------------ YELLOW ------------");
+                        // Als er geslagen kan worden en je hebt een steen opgepakt waarmee je niet kan slaan
+                        if(moveArray[x][y] == 1 && moveArray[curx][cury]==0){
+                            // Stenen waarmee je kan slaan, geel kleuren als hulplijn
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
-                            
-                            player1Array[curx][cury]=1;
-                            
-                            System.out.println("curx: " + curx);
-                            System.out.println("cury: " + cury);
-                            taken = false;
                         }
                         else
                         {
-                            //g.setColor(Color.BLUE);
-                            //g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
-                            //g.setColor(Color.WHITE);
+                            g.setColor(Color.BLUE);
+                            g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         }
                     }
-                    else if(player2Array[x][y] ==1)
-                    {
-                        if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
-                        {
-                            System.out.println("------------ YELLOW ------------");
+                    else if(player2Array[x][y] ==1){
+                        // Als er geslagen kan worden en je hebt een steen opgepakt waarmee je niet kan slaan
+                        if(moveArray[x][y] == 1 && moveArray[curx][cury]==0){
+                            // Stenen waarmee je kan slaan, geel kleuren als hulplijn
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
-                            
-                            player2Array[curx][cury]=1;
-                            
-                            System.out.println("curx: " + curx);
-                            System.out.println("cury: " + cury);
-                            taken = false;
                         }
                         else
                         {
-                            System.out.println("- RED -");
                             g.setColor(Color.RED);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         }
                     }
-                    else { } 
                 }
-                else {
+                else { // Zwarte velden
                     g.setColor(Color.BLACK);
                     g.fillRect(x*50+xoff, y*50+yoff, 50, 50);
+                    
                     if(player1Array[x][y] == 1) 
                     {
                         if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
                         {
-                            System.out.println("------------ YELLOW ------------");
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
-                            
-                            player1Array[curx][cury]=1;
-                            
-                            System.out.println("curx: " + curx);
-                            System.out.println("cury: " + cury);
-                            taken = false;
                         }
                         else
                         {
                              g.setColor(Color.BLUE);
-                                g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
                         }
-                       
-                        //g.setColor(Color.WHITE);
                     }
                     else if(player2Array[x][y] ==1)
                     {
                         if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
                         {
-                            System.out.println("------------ YELLOW ------------");
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
-                            
-                            player2Array[curx][cury]=1;
-                            
-                            System.out.println("curx: " + curx);
-                            System.out.println("cury: " + cury);
-                            taken = false;
                         }
                         else
                         {
@@ -181,7 +145,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         }
                        
                     }
-                    else {  }
                 } 
             }     
         }
@@ -191,70 +154,79 @@ public class ChessBoard extends HComponent implements UserEventListener {
         cleanMoveArray();
     }
     
-    public void switchPlayer()
-    {
-      if(turnPlayer == 1){
-        System.out.println("Turn for player 2");
-        turnPlayer = 2;
-      }
-        
-      else{
-        System.out.println("Turn for player 1");
-        turnPlayer = 1;
-      }
-    }
-    
+    // Pijltjes laten bewegen
+    // Events aan 'Enter' gelinkt: stenen oppakken en plaatsen
     public void userEventReceived(UserEvent e) {
-       pressEnter = false;
        if (e.getType()==HRcEvent.KEY_PRESSED)
        {
-           if (e.getCode()==HRcEvent.VK_RIGHT && curx < 9) curx++; //als je pijltje naar rechts druk, volgend vak
+           // Events gelinkt aan de pijltjes als ze binnen het bord blijven
+           if (e.getCode()==HRcEvent.VK_RIGHT && curx < 9) curx++;
            else if (e.getCode()==HRcEvent.VK_LEFT && curx > 0) curx--;
            else if (e.getCode()==HRcEvent.VK_DOWN && cury < 9) cury++;
            else if (e.getCode()==HRcEvent.VK_UP && cury > 0) cury--;
            
+           // Wanneer er op 'Enter' wordt gedrukt en er is nog geen steen opgepakt
            else if(e.getCode()==HRcEvent.VK_ENTER && taken == false)
            {
-               System.out.println("OPNIEUW CANHIT CHECKEN!!");
-               
-               if(turnPlayer==1)
-               { // player 1 turn
+               if(turnPlayer==1) // Speler 1 aan beurt
+               {// Als er op de huidige positie een steen kan worden opgepakt
                   if(player1Array[curx][cury]==1)
                   {
-                      canHit(player1Array, player2Array);
-                      System.out.println("BEZET");
-                      player1Array[curx][cury] = 0;
-                      taken = true;
-                      takenX = curx;
-                      takenY = cury;
-                  }
-                  else
-                  {
-                      System.out.println("NIET BEZET");
+                      canHit(player1Array, player2Array); // Check of er op het bord een steen kan slaan (verplicht!)
+                      
+                      // Als je kan slaan
+                      if(canHit)
+                      {
+                          // Als de steen die je wil oppakken kan slaan, pak hem op
+                          if(moveArray[curx][cury]==1)
+                          {
+                              player1Array[curx][cury] = 0;
+                              taken = true;
+                              takenX = curx;
+                              takenY = cury;
+                          }
+                      }
+                      else // Als je niet kan slaan mag je een steen naar keuze oppakken
+                      {
+                          player1Array[curx][cury] = 0;
+                          taken = true;
+                          takenX = curx;
+                          takenY = cury;
+                      }
                   }
                }
-               else
-               { // player 2 turn
+               else // Speler 2 aan beurt
+               {
                     if(player2Array[curx][cury]==1)
                     {
                         canHit(player2Array, player1Array);
-                        System.out.println("BEZET");
-                        player2Array[curx][cury] = 0;
-                        taken = true;
-                        takenX = curx;
-                        takenY = cury;
-                    }
-                    else
-                    {
-                      System.out.println("NIET BEZET");
+                        
+                        if(canHit) // Als je kan slaan
+                        {
+                            // Als de steen die je wil oppakken kan slaan, pak hem op
+                            if(moveArray[curx][cury]==1) // 
+                            {
+                                player2Array[curx][cury] = 0;
+                                taken = true;
+                                takenX = curx;
+                                takenY = cury;
+                            }
+                        }
+                        else // Als je niet kan slaan, pak een steen naar keuze op
+                        {
+                            player2Array[curx][cury] = 0;
+                            taken = true;
+                            takenX = curx;
+                            takenY = cury;
+                        }
                     }
                }
-               pressEnter = true;
            }
            else if(e.getCode()==HRcEvent.VK_ENTER && taken==true)
            {
                if(turnPlayer==1)
                {
+                   // Steen plaatsen op het veld
                    moves(player1Array, player2Array, 1);
                    
                    if(hit)
@@ -266,6 +238,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                }
                else if(turnPlayer==2)
                {
+                   // Steen plaatsen op het veld
                    moves(player2Array, player1Array, -1);
                    
                    if(hit)
@@ -275,14 +248,15 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        hit = false;
                    }
                }
-               pressEnter = true;
            }
            this.repaint();
        }
     }
     
-    // boolean true --> player can hit opponent
-    // boolean false --> player can't hit opponent
+    // Gaat alle stenen in de array van de speler aan beurt af en checkt of er een steen kan slaan
+    // Past 'canHit' boolean aan
+    // canHit true --> player can hit opponent
+    // canHit false --> player can't hit opponent
     public void canHit(int[][] ownArray, int[][]opponentArray)
     {
         cleanMoveArray();
@@ -296,49 +270,41 @@ public class ChessBoard extends HComponent implements UserEventListener {
                     if(x>1 && y >1) // binnen het bord blijven
                     {
                         // Check of er een blokje van de tegenstander rondligt en daarachter een leeg vakje is
+                        // Links boven
                         if(opponentArray[x-1][y-1]==1 && ownArray[x-2][y-2]==0 && opponentArray[x-2][y-2]==0) // links boven
                         {
                             // toevoegen aan array
                             moveArray[x][y]=1;
-                            /* TODO
-                             * Als speler aan beurt is checken of canHit true is
-                             * als hij true is mogen enkel de stenen in de nieuwe array verplaatst worden
-                             * en als hij false is dan mag elke steen verplaatst worden
-                             * */
-                            System.out.println("x&y bewegen: " + x + " & " + y);
                             canHit = true;
                         }
                     }
                     if(x<9 && y>1)
                     {
+                        // Rechts boven
                         if(opponentArray[x+1][y-1]==1 && ownArray[x+2][y-2]==0 && opponentArray[x+2][y-2]==0) // rechts boven
                         {
                             // toevoegen aan array
                             moveArray[x][y]=1;
-                            
-                            System.out.println("x&y bewegen: " + x + " & " + y);
                             canHit = true;
                         } 
                     }
                     if(x>1 && y<9)
                     {
+                        // Links onder
                         if(opponentArray[x-1][y+1]==1 && ownArray[x-2][y+2]==0 && opponentArray[x-2][y+2]==0) // links onder
                         {
                             // toevoegen aan array
                             moveArray[x][y]=1;
-                            
-                            System.out.println("x&y bewegen: " + x + " & " + y);
                             canHit = true;
                         }
                     }
                     if(x<9 && y<9)
                     {
+                      // Rechts onder
                       if(opponentArray[x+1][y+1]==1 && ownArray[x+2][y+2]==0 && opponentArray[x+2][y+2]==0) // rechts onder
                       {
                             // toevoegen aan array
                             moveArray[x][y]=1;
-                          
-                            System.out.println("x&y bewegen: " + x + " & " + y);
                             canHit = true;
                       }
                     }
@@ -347,45 +313,22 @@ public class ChessBoard extends HComponent implements UserEventListener {
         }
     }
     
-    public boolean freeSpaceAroundPiece(int x, int y)
-    {
-        if(player1Array[x-1][y-1]==1 || player1Array[x+1][y+1]==1 || player1Array[x+1][y-1]==1 || player1Array[x-1][y+1]==1)
-        {
-            return false;
-        }
-        else if(player2Array[x-1][y-1]==1 || player2Array[x+1][y+1]==1 || player2Array[x+1][y-1]==1 || player2Array[x-1][y+1]==1)
-        {
-            return false;
-        }
-        return true;
-    }
-    
+    // Checkt of er op curx en cury een steen mag worden neergezet
     public void moves(int[][] ownArray, int[][] opponentArray, int offset)
     {
-       //System.out.println("takenX: " + takenX);
-       //System.out.println("takenY: " + takenY);
-       //System.out.println("curx: " + curx);
-       //System.out.println("cury: " + cury);
-        
        // Niet buiten het veld en er het veld moet leeg zijn
        if(curx < 10 && curx >= 0 && cury < 10 && cury >=0 && player1Array[curx][cury]==0 && player2Array[curx][cury]==0)
        {
-           
-           System.out.println("============ MOVES ===========");
-           System.out.println("canHit: " + canHit);
-           
            if(canHit) // je moet slaan
            {
-               System.out.println("SLAAN IS VERPLICHT! U KUNT SLAAN!");
                if(curx==takenX+2 && cury==takenY+2) // Rechts onder slaan
                {
                    if(opponentArray[takenX+1][takenY+1]==1) // Als je een stuk van de tegenstander kan slaan
                    {
-                       opponentArray[takenX+1][takenY+1]=0;
-                       ownArray[curx][cury] = 1;
+                       opponentArray[takenX+1][takenY+1]=0; // Steen van de tegenstander van het bord halen
+                       ownArray[curx][cury] = 1; // Je eigen steen plaatsen
                        taken = false;
                        hit = true;
-                       System.out.println("Speler mag nog eens want hij heeft rechts onder geslagen.");
                        cleanMoveArray();
                    }
                }
@@ -393,12 +336,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
                {
                    if(opponentArray[takenX+1][takenY-1]==1) // Als je een stuk van de tegenstander kan slaan
                    {
-                       opponentArray[takenX+1][takenY-1]=0;
-                       ownArray[curx][cury] = 1;
+                       opponentArray[takenX+1][takenY-1]=0; // Steen van de tegenstander van het bord halen
+                       ownArray[curx][cury] = 1; // Eigen steen plaatsen
                        taken = false;
                        hit = true;
-                       System.out.println("curx,cury: " +curx+ " & " + cury);
-                       System.out.println("Speler mag nog eens want hij heeft rechts boven geslagen.");
                        cleanMoveArray();
                    }
                }
@@ -406,11 +347,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
                {
                    if(opponentArray[takenX-1][takenY+1]==1) // Als je een stuk van de tegenstander kan slaan
                    {
-                       opponentArray[takenX-1][takenY+1]=0;
-                       ownArray[curx][cury] = 1;
+                       opponentArray[takenX-1][takenY+1]=0; // Steen van de tegenstander van het bord halen
+                       ownArray[curx][cury] = 1; // Eigen steen plaatsen
                        taken = false;
                        hit = true;
-                       System.out.println("Speler mag nog eens want hij heeft links onder geslagen.");
                        cleanMoveArray();
                    }
                }
@@ -418,76 +358,98 @@ public class ChessBoard extends HComponent implements UserEventListener {
                {
                    if(opponentArray[takenX-1][takenY-1]==1) // Als je een stuk van de tegenstander kan slaan
                    {
-                       opponentArray[takenX-1][takenY-1]=0;
-                       ownArray[curx][cury] = 1;
+                       opponentArray[takenX-1][takenY-1]=0; // Steen van de tegenstander van het bord halen
+                       ownArray[curx][cury] = 1; // Eigen steen plaatsen
                        taken = false;
                        hit = true;
-                       System.out.println("Speler mag nog eens want hij heeft links boven geslagen.");
                        cleanMoveArray();
                    }
                }
+               else // Als de speler niet slaat met de steen dan wordt deze teruggezet om opnieuw te proberen
+               {
+                   ownArray[takenX][takenY] = 1;
+                   taken = false;
+               }
                
-               // Als de speler niet meer verder kan slaan is de beurt aan de tegenstander
+               // Als de speler geslagen heeft en niet meer verder kan slaan is de beurt aan de tegenstander
                canHit(ownArray, opponentArray);
-               if(canHit == false)
+               if(canHit == false && hit==true)
                {
                    switchPlayer();
                }
            }
-           else // 1 schuine stap zetten
+           else if(hit == false) // Als je niet kan slaan & je hebt geen steen vast die nog moet slaan
            {
-               System.out.println("U MAG EEN GEWONE ZET ZETTEN");
-               System.out.println("curx: " + curx);
-               System.out.println("cury: " + cury);
-               System.out.println("takenX: " + takenX);
-               System.out.println("takenY: " + takenY);
-               System.out.println("offset: " + offset);
                if(curx==takenX+1 && cury==takenY+offset) // Damstuk 1 stap rechts schuin zetten
                {
-                   System.out.println("Zet schuin rehts");
                    ownArray[curx][cury] = 1;
                    taken = false;
                    switchPlayer();
                }
                else if(curx==takenX-1 && cury==takenY+offset) // Damstuk 1 stap links schuin zetten
                {
-                   System.out.println("Zet schuin links");
                    ownArray[curx][cury] = 1;
                    taken = false;
                    switchPlayer();
                }
                else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
                {
-                   // TODO: kan enkel als er echt geen andere zetten zijn met die steen
-                   //System.out.println("CAANHIIT: " + canHit);
-                   //if(freeSpaceAroundPiece(curx,cury) || canHit)
-                   //{
+                   if(freeSpaceAroundPiece(curx,cury)==false)
+                   {
                        ownArray[curx][cury] = 1;
                        taken = false;
-                   //}
+                   }
                }
            } 
        } 
     }
     
-    /*
-    public boolean allowedToDrop() {
-        if(curx == takenX+1 && cury == takenY+1 || curx == takenX-1 && cury == takenY+1){ 
-            //als je 1 naar voor gaat en 1 naar L or R -> allowed
-            if(player1Array[curx][cury] == 0) { //als er nog geen blokje staat
-                return true;
+    // Alle stenen in de moveArray worden gelijkgesteld aan 0
+    public void cleanMoveArray()
+    {
+        for(int x=0; x < moveArray.length; x++)
+        {
+            for(int y = 0; y < moveArray.length; y++)
+            {
+                moveArray[x][y] = 0;
             }
-            else{return false;}      
         }
-        else{return false;}
     }
     
-    public boolean allowedToTake() { // als er een plaats vrij is
-        //nog uitzondering voor zijkanten toevoegen (out of range)
+    // Andere speler is aan de beurt
+    public void switchPlayer()
+    {
+      if(turnPlayer == 1){
+        System.out.println("Turn for player 2");
+        turnPlayer = 2;
+      }
         
-        if(player1Array[curx+1][cury+1] == 0 || player1Array[curx-1][cury+1] == 0){
-                   return true;
+      else{
+        System.out.println("Turn for player 1");
+        turnPlayer = 1;
+      }
+    }
+    
+    // Kijkt of de vakjes rond de meegegeven coordinaten leeg zijn
+    // Als offset 1 is dan 
+    // return true --> er zijn nog plaatsen waar de damsteen kan staan
+    // return false --> de damsteen kan nergens staan
+    public boolean freeSpaceAroundPiece(int x, int y)
+    {
+        if(turnPlayer==1)
+        {
+            if((player1Array[x-1][y+1]==1 || player2Array[x-1][y+1]==1) && (player1Array[x+1][y+1]==1 || player2Array[x+1][y+1]==1))
+            {
+                return false;
+            }
         }
-        else{return false;}
-    }*/
+        else if(turnPlayer==2)
+        {
+            if((player1Array[x-1][y-1]==1 || player2Array[x-1][y-1]==1) && (player1Array[x+1][y-1]==1 || player2Array[x+1][y-1]==1))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
