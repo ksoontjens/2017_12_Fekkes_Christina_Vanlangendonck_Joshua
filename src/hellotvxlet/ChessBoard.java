@@ -231,7 +231,9 @@ public class ChessBoard extends HComponent implements UserEventListener {
                    
                    if(hit)
                    {
+                       
                        // Score player 1 verhogen
+                       //test
                        // Lukt me nog niet, ik heb wel labels aangemaakt in HelloTVXlet.java
                        hit = false;
                    }
