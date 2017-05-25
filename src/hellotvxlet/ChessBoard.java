@@ -27,6 +27,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     int takenX; // onthouden waar de steen genomen is
     int takenY;
+    private HelloTVXlet helloTvXlet = new HelloTVXlet();
     
     // Alle stenen van de speler
     int[][] player1Array = new int[10][10];
@@ -53,7 +54,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
                    {
                        player1Array[y][x] = 1;//zet damstukjes op juiste plaats
                        player2Array[y][x] = 0;
-                    
                    }
                    else if(x>5)
                    {
@@ -231,10 +231,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
                    
                    if(hit)
                    {
-                       
                        // Score player 1 verhogen
-                       //test
-                       // Lukt me nog niet, ik heb wel labels aangemaakt in HelloTVXlet.java
+                       helloTvXlet.addScorePlayer1();
                        hit = false;
                    }
                }
@@ -246,7 +244,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                    if(hit)
                    {
                        // Score player 2 verhogen
-                       // Lukt me nog niet, ik heb wel labels aangemaakt in HelloTVXlet.java
+                       helloTvXlet.addScorePlayer2();
                        hit = false;
                    }
                }

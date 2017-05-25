@@ -7,7 +7,9 @@ import org.dvb.event.UserEventRepository;
 import org.havi.ui.HScene;
 import org.havi.ui.HSceneFactory;
 import org.havi.ui.HStaticText;
+import org.havi.ui.HText;
 import org.havi.ui.event.HActionListener;
+import org.havi.ui.HVisible;
 
 
 public class HelloTVXlet implements Xlet, HActionListener {
@@ -18,6 +20,9 @@ public class HelloTVXlet implements Xlet, HActionListener {
     static public HStaticText scorePlayer2;
     private HStaticText labelPlayer1;
     private HStaticText labelPlayer2;
+    
+    private int score1 = 0;
+    private int score2 = 0;
     
     public HelloTVXlet() {
         
@@ -56,7 +61,6 @@ public class HelloTVXlet implements Xlet, HActionListener {
       scene.add(bord);
       scene.validate();
       scene.setVisible(true);
-
     }
 
     public void startXlet() {
@@ -65,6 +69,16 @@ public class HelloTVXlet implements Xlet, HActionListener {
 
     public void pauseXlet() {
      
+    }
+    
+    public void addScorePlayer1() {
+        score1++;
+        scorePlayer1.setTextContent(Integer.toString(score1),HVisible.NORMAL_STATE);
+    }
+    
+    public void addScorePlayer2() {
+        score2++;
+        scorePlayer2.setTextContent(Integer.toString(score2),HVisible.NORMAL_STATE);
     }
 
     public void destroyXlet(boolean unconditional) {
