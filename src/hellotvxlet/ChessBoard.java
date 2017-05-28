@@ -14,8 +14,6 @@ import org.dvb.event.UserEventListener;
 import org.havi.ui.HComponent;
 import java.awt.Image;
 
-// TEST
-
 /**
  *
  * @author student
@@ -90,8 +88,6 @@ public class ChessBoard extends HComponent implements UserEventListener {
      * Geel: stenen die geslagen kunnen worden */
     public void paint(Graphics g)
     {
-        System.out.println("================== PAINT ===================");
-
         g.drawImage(Player1, 610, 50,null);
         g.drawImage(Player2, 610, 350,null);
         
@@ -109,6 +105,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                             // Stenen waarmee je kan slaan, geel kleuren als hulplijn
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            helloTvXlet.changeMessage("Speler 1: slaan is verplicht!");
                         }
                         else
                         {
@@ -122,6 +119,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                             // Stenen waarmee je kan slaan, geel kleuren als hulplijn
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            helloTvXlet.changeMessage("Speler 2: slaan is verplicht!");
                         }
                         else
                         {
@@ -140,6 +138,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         {
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            helloTvXlet.changeMessage("Speler 1: slaan is verplicht!");
                         }
                         else
                         {
@@ -153,6 +152,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         {
                             g.setColor(Color.YELLOW);
                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            helloTvXlet.changeMessage("Speler 2: slaan is verplicht!");
                         }
                         else
                         {
@@ -294,7 +294,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                             canHit = true;
                         }
                     }
-                    if(x<9 && y>1)
+                    if(x<8 && y>1)
                     {
                         // Rechts boven
                         if(opponentArray[x+1][y-1]==1 && ownArray[x+2][y-2]==0 && opponentArray[x+2][y-2]==0) // rechts boven
@@ -304,7 +304,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                             canHit = true;
                         } 
                     }
-                    if(x>1 && y<9)
+                    if(x>1 && y<8)
                     {
                         // Links onder
                         if(opponentArray[x-1][y+1]==1 && ownArray[x-2][y+2]==0 && opponentArray[x-2][y+2]==0) // links onder
@@ -314,7 +314,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                             canHit = true;
                         }
                     }
-                    if(x<9 && y<9)
+                    if(x<8 && y<8)
                     {
                       // Rechts onder
                       if(opponentArray[x+1][y+1]==1 && ownArray[x+2][y+2]==0 && opponentArray[x+2][y+2]==0) // rechts onder
@@ -410,6 +410,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                }
                else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
                {
+                   helloTvXlet.changeMessage("Je mag enkel op dezelfde plaats staan als je niet anders kan.");
                    if(freeSpaceAroundPiece(curx,cury)==false)
                    {
                        ownArray[curx][cury] = 1;
@@ -438,11 +439,13 @@ public class ChessBoard extends HComponent implements UserEventListener {
       if(turnPlayer == 1){
         System.out.println("Turn for player 2");
         turnPlayer = 2;
+        helloTvXlet.changeMessage("Speler 2 is aan zet");
       }
         
       else{
         System.out.println("Turn for player 1");
         turnPlayer = 1;
+        helloTvXlet.changeMessage("Speler 1 is aan zet.");
       }
     }
     
