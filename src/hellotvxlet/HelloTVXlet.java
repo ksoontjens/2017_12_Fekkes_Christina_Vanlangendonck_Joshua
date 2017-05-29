@@ -16,21 +16,23 @@ import org.havi.ui.HVisible;
 public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
 
     HScene scene;
-    
+   
     static public HStaticText gameMessage;
     static public HStaticText scorePlayer1;
     static public HStaticText scorePlayer2;
+    static private HStaticText winnerScreen;
     private HStaticText labelPlayer1;
     private HStaticText labelPlayer2;
+    private boolean gameover = false;
     
-    private int score1 = 0;
-    private int score2 = 0;
-    
+    public int score1 = 20; // aantal stenen op het veld
+    public int score2 = 20;
+
     public HelloTVXlet() {
         
     }
 
-    public void initXlet(XletContext context) { //720 x 576 (make smaller later)
+    public void initXlet(XletContext context) { //720 x 576
       scene=HSceneFactory.getInstance().getDefaultHScene();
       ChessBoard bord=new ChessBoard();
          UserEventRepository repo=new UserEventRepository("repo");
@@ -49,11 +51,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
       labelPlayer2.setLocation(585, 400);
       labelPlayer2.setSize(100,40);
       
-      scorePlayer1 = new HStaticText("0");
+      scorePlayer1 = new HStaticText(Integer.toString(score1));
       scorePlayer1.setLocation(585,140);
       scorePlayer1.setSize(100,40);
       
-      scorePlayer2 = new HStaticText("0");
+      scorePlayer2 = new HStaticText(Integer.toString(score2));
       scorePlayer2.setLocation(585,440);
       scorePlayer2.setSize(100,40);
      
@@ -62,7 +64,15 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
       gameMessage.setSize(650,40);
       gameMessage.setBackground(new DVBColor(1,255,1,100));
       gameMessage.setBackgroundMode(HVisible.BACKGROUND_FILL);
+      
+      winnerScreen = new HStaticText("");
+      winnerScreen.setLocation(50,50);
+      winnerScreen.setSize(500,500);
+      winnerScreen.setBackground(new DVBColor(1,100,1,200));
+      winnerScreen.setBackgroundMode(HVisible.NO_BACKGROUND_FILL);
+      
  
+      scene.add(winnerScreen);
       scene.add(gameMessage);
       scene.add(scorePlayer1);
       scene.add(scorePlayer2);
@@ -81,14 +91,29 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
      
     }
     
+    public boolean getGameOver()
+    {
+        return gameover;
+    }
+    
+    public void winner(java.lang.String winner)
+    {
+        winnerScreen.setTextContent(winner + " heeft gewonnen!", HVisible.NORMAL_STATE);
+        winnerScreen.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        gameMessage.setTextContent("Proficiat!", HVisible.NORMAL_STATE);
+        gameover = true;
+    }
+    
     public void addScorePlayer1() {
-        score1++;
-        scorePlayer1.setTextContent(Integer.toString(score1),HVisible.NORMAL_STATE);
+        score2--;
+        scorePlayer2.setTextContent(Integer.toString(score2),HVisible.NORMAL_STATE);
+        if(score2==0) winner("Speler 1");
     }
     
     public void addScorePlayer2() {
-        score2++;
-        scorePlayer2.setTextContent(Integer.toString(score2),HVisible.NORMAL_STATE);
+        score1--;
+        scorePlayer1.setTextContent(Integer.toString(score1),HVisible.NORMAL_STATE);
+        if(score1==0) winner("Speler 2");
     }
     
     public void changeMessage(java.lang.String str)

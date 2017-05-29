@@ -50,7 +50,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
     
     int turnPlayer = 1; // speler die aan beurt is, kan 1 of 2 zijn
     int hitCounter = 0; // hoevaak een dam heeft geslagen, om score bij te houden
-    
+
     // Board set-up
     // Damstenen worden in juiste array geplaatst
     public ChessBoard()
@@ -162,7 +162,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
     // Pijltjes laten bewegen
     // Events aan 'Enter' gelinkt: stenen oppakken en plaatsen
     public void userEventReceived(UserEvent e) {
-       if (e.getType()==HRcEvent.KEY_PRESSED)
+       if (e.getType()==HRcEvent.KEY_PRESSED && helloTvXlet.getGameOver()==false)
        {
            // Events gelinkt aan de pijltjes als ze binnen het bord blijven
            if (e.getCode()==HRcEvent.VK_RIGHT && curx < 9) curx++;
@@ -240,7 +240,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        if(hit)
                        {// aantal stenen die een dam per zet slaat
                            for(int i = 0; i<hitCounter; i++) 
-                              {helloTvXlet.addScorePlayer1();}
+                           {
+                               helloTvXlet.addScorePlayer1();
+                               //if(helloTvXlet.score2==0) helloTvXlet.winner("Speler 1");
+                           }
                            hit = false;
                        }
                    }
@@ -258,6 +261,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        { // Score player 1 verhogen
                            helloTvXlet.addScorePlayer1();
                            hit = false;
+                           //if(helloTvXlet.score2==0) helloTvXlet.winner("Speler 1");
                        }
                    }
                }
@@ -270,7 +274,10 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        if(hit)
                        {
                            for(int i = 0; i<hitCounter; i++)
-                             {helloTvXlet.addScorePlayer2();}
+                           {
+                               helloTvXlet.addScorePlayer2();
+                               //if(helloTvXlet.score1==0) helloTvXlet.winner("Speler 2");
+                           }
                            hit = false;
                        }
                    }
@@ -282,6 +289,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
                        { // Score player 2 verhogen
                            helloTvXlet.addScorePlayer2();
                            hit = false;
+                           //if(helloTvXlet.score1==0) helloTvXlet.winner("Speler 2");
                        }
                        if(cury==0)
                        {
