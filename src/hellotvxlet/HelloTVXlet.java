@@ -41,11 +41,11 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
      man.addUserEventListener(bord, repo);
      
      
-      labelPlayer1 = new HStaticText("Player 1:");
+      labelPlayer1 = new HStaticText("Speler 1:");
       labelPlayer1.setLocation(585, 100);
       labelPlayer1.setSize(100,40);
       
-      labelPlayer2 = new HStaticText("Player 2:");
+      labelPlayer2 = new HStaticText("Speler 2:");
       labelPlayer2.setLocation(585, 400);
       labelPlayer2.setSize(100,40);
       
