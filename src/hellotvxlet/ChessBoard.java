@@ -47,6 +47,7 @@ public class ChessBoard extends HComponent implements UserEventListener {
     boolean hit = false; // om score van de speler te verhogen als er geslagen is
     boolean canHit = false; // om te checken of te speler aan beurt kan slaan, is verplicht
     boolean tookDam = false; // true: dam is opgepakt ipv gewone steen
+    boolean start = true; // true: spel is net begonnen, begin screen mag weg
     
     int turnPlayer = 1; // speler die aan beurt is, kan 1 of 2 zijn
     int hitCounter = 0; // hoevaak een dam heeft geslagen, om score bij te houden
@@ -112,8 +113,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
                         {
                             g.setColor(Color.YELLOW); // Met geel aanduiden welke stenen kunnen slaan
-                            if(player1Array[x][y]==2) g.fillRect(x*50+xoff, y*50+yoff,40, 40);
-                            else if(player1Array[x][y]==1) g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            if(player1Array[x][y]==2) g.fillRect(x*50+xoff+4, y*50+yoff+4,40, 40);
+                            else if(player1Array[x][y]==1) g.fillOval(x*50+xoff+4, y*50+xoff+4, 40, 40);
                             
                             helloTvXlet.changeMessage("Speler 1: slaan is verplicht!");
                         }
@@ -133,8 +134,8 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         if(moveArray[x][y] == 1 && moveArray[curx][cury]==0)
                         {
                             g.setColor(Color.YELLOW); // Met geel aanduiden welke stenen kunnen slaan
-                            if(player2Array[x][y]==2) g.fillRect(x*50+xoff, y*50+xoff, 40, 40);
-                            else if(player2Array[x][y]==1) g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                            if(player2Array[x][y]==2) g.fillRect(x*50+xoff+4, y*50+xoff+4, 40, 40);
+                            else if(player2Array[x][y]==1) g.fillOval(x*50+xoff+4, y*50+xoff+4, 40, 40);
                             
                             helloTvXlet.changeMessage("Speler 2: slaan is verplicht!");
                         }
@@ -163,25 +164,44 @@ public class ChessBoard extends HComponent implements UserEventListener {
     public void userEventReceived(UserEvent e) {
        if (e.getType()==HRcEvent.KEY_PRESSED && helloTvXlet.getGameOver()==false)
        {
-           // Events gelinkt aan de pijltjes als ze binnen het bord blijven
-           if (e.getCode()==HRcEvent.VK_RIGHT && curx < 9) curx++;
-           else if (e.getCode()==HRcEvent.VK_LEFT && curx > 0) curx--;
-           else if (e.getCode()==HRcEvent.VK_DOWN && cury < 9) cury++;
-           else if (e.getCode()==HRcEvent.VK_UP && cury > 0) cury--;
-           
-           // Wanneer er op 'Enter' wordt gedrukt en er is nog geen steen opgepakt
-           else if(e.getCode()==HRcEvent.VK_ENTER && taken == false)
+           if(start) // Begin van het spel, begin scherm moet nog weg
            {
-               tookDam = false;
-               if(turnPlayer==1) // Speler 1 aan beurt
-               {// Als er op de huidige positie een steen kan worden opgepakt
-                  if(player1Array[curx][cury]==1 || player1Array[curx][cury]==2)
-                  {
-                      canHit(player1Array, player2Array); // check of speler 1 kan slaan (verplicht!)
-                      
-                      if(canHit)// Als je kan slaan
-                      { // Als de steen die je wil oppakken kan slaan, pak hem op
-                          if(moveArray[curx][cury]==1)
+               if(e.getCode()==HRcEvent.VK_ENTER)
+               {
+                   helloTvXlet.stopBeginScreen();
+                   start = false;
+               }
+           }
+           else // Tijdens het spel
+           {
+               // Events gelinkt aan de pijltjes als ze binnen het bord blijven
+               if (e.getCode()==HRcEvent.VK_RIGHT && curx < 9) curx++;
+               else if (e.getCode()==HRcEvent.VK_LEFT && curx > 0) curx--;
+               else if (e.getCode()==HRcEvent.VK_DOWN && cury < 9) cury++;
+               else if (e.getCode()==HRcEvent.VK_UP && cury > 0) cury--;
+
+               // Wanneer er op 'Enter' wordt gedrukt en er is nog geen steen opgepakt
+               else if(e.getCode()==HRcEvent.VK_ENTER && taken == false)
+               {
+                   tookDam = false;
+                   if(turnPlayer==1) // Speler 1 aan beurt
+                   {// Als er op de huidige positie een steen kan worden opgepakt
+                      if(player1Array[curx][cury]==1 || player1Array[curx][cury]==2)
+                      {
+                          canHit(player1Array, player2Array); // check of speler 1 kan slaan (verplicht!)
+
+                          if(canHit)// Als je kan slaan
+                          { // Als de steen die je wil oppakken kan slaan, pak hem op
+                              if(moveArray[curx][cury]==1)
+                              {
+                                  if(player1Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
+                                  player1Array[curx][cury] = 0;
+                                  taken = true;
+                                  takenX = curx;
+                                  takenY = cury;
+                              }
+                          }
+                          else // Als je niet kan slaan mag je een steen naar keuze oppakken
                           {
                               if(player1Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
                               player1Array[curx][cury] = 0;
@@ -190,25 +210,25 @@ public class ChessBoard extends HComponent implements UserEventListener {
                               takenY = cury;
                           }
                       }
-                      else // Als je niet kan slaan mag je een steen naar keuze oppakken
-                      {
-                          if(player1Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
-                          player1Array[curx][cury] = 0;
-                          taken = true;
-                          takenX = curx;
-                          takenY = cury;
-                      }
-                  }
-               }
-               else // Speler 2 aan beurt
-               {
-                    if(player2Array[curx][cury]==1 || player2Array[curx][cury]==2)
-                    {
-                        canHit(player2Array, player1Array); // check of speler 2 kan slaan (verplicht!)
-                        
-                        if(canHit) // Als je kan slaan
-                        { // Als de steen die je wil oppakken kan slaan, pak hem op
-                            if(moveArray[curx][cury]==1) // 
+                   }
+                   else // Speler 2 aan beurt
+                   {
+                        if(player2Array[curx][cury]==1 || player2Array[curx][cury]==2)
+                        {
+                            canHit(player2Array, player1Array); // check of speler 2 kan slaan (verplicht!)
+
+                            if(canHit) // Als je kan slaan
+                            { // Als de steen die je wil oppakken kan slaan, pak hem op
+                                if(moveArray[curx][cury]==1) // 
+                                {
+                                    if(player2Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
+                                    player2Array[curx][cury] = 0;
+                                    taken = true;
+                                    takenX = curx;
+                                    takenY = cury;
+                                }
+                            }
+                            else // Als je niet kan slaan, pak een steen naar keuze op
                             {
                                 if(player2Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
                                 player2Array[curx][cury] = 0;
@@ -217,87 +237,80 @@ public class ChessBoard extends HComponent implements UserEventListener {
                                 takenY = cury;
                             }
                         }
-                        else // Als je niet kan slaan, pak een steen naar keuze op
-                        {
-                            if(player2Array[curx][cury]==2) tookDam = true; // dam steen opgepakt
-                            player2Array[curx][cury] = 0;
-                            taken = true;
-                            takenX = curx;
-                            takenY = cury;
-                        }
-                    }
-               }
-           } // Wanneer er op 'Enter' wordt gedrukt en er is al een steen opgepakt
-           else if(e.getCode()==HRcEvent.VK_ENTER && taken==true)
-           {
-               if(turnPlayer==1)
+                   }
+               } // Wanneer er op 'Enter' wordt gedrukt en er is al een steen opgepakt
+               else if(e.getCode()==HRcEvent.VK_ENTER && taken==true)
                {
-                   if(tookDam) // dam verplaatsen
+                   if(turnPlayer==1)
                    {
-                       moves(player1Array, player2Array,0); // verplaats dam
-                       
-                       if(hit)
-                       {// aantal stenen die een dam per zet slaat
-                           for(int i = 0; i<hitCounter; i++) 
+                       if(tookDam) // dam verplaatsen
+                       {
+                           moves(player1Array, player2Array,0); // verplaats dam
+
+                           if(hit)
+                           {// aantal stenen die een dam per zet slaat
+                               for(int i = 0; i<hitCounter; i++) 
+                               {
+                                   helloTvXlet.addScorePlayer1();
+                                   //if(helloTvXlet.score2==0) helloTvXlet.winner("Speler 1");
+                               }
+                               hit = false;
+                           }
+                       }
+                       else // normale steen verplaatsen
+                       {
+                           moves(player1Array, player2Array, 1); // verplaats steen
+
+                           if(cury == 9) // Aan de achterkant van het veld. Steen wordt dam.
                            {
+                               helloTvXlet.changeMessage("Speler 1 heeft een dam!");
+                               player1Array[curx][cury] = 2;
+                           }
+
+                           if(hit)
+                           { // Score player 1 verhogen
                                helloTvXlet.addScorePlayer1();
+                               hit = false;
                                //if(helloTvXlet.score2==0) helloTvXlet.winner("Speler 1");
                            }
-                           hit = false;
                        }
                    }
-                   else // normale steen verplaatsen
+                   else if(turnPlayer==2)
                    {
-                       moves(player1Array, player2Array, 1); // verplaats steen
-
-                       if(cury == 9) // Aan de achterkant van het veld. Steen wordt dam.
+                       if(tookDam) // dam verplaatsen
                        {
-                           helloTvXlet.changeMessage("Speler 1 heeft een dam!");
-                           player1Array[curx][cury] = 2;
-                       }
+                           moves(player2Array, player1Array,0); // verplaats dam
 
-                       if(hit)
-                       { // Score player 1 verhogen
-                           helloTvXlet.addScorePlayer1();
-                           hit = false;
-                           //if(helloTvXlet.score2==0) helloTvXlet.winner("Speler 1");
-                       }
-                   }
-               }
-               else if(turnPlayer==2)
-               {
-                   if(tookDam) // dam verplaatsen
-                   {
-                       moves(player2Array, player1Array,0); // verplaats dam
-                       
-                       if(hit)
-                       {
-                           for(int i = 0; i<hitCounter; i++)
+                           if(hit)
                            {
+                               for(int i = 0; i<hitCounter; i++)
+                               {
+                                   helloTvXlet.addScorePlayer2();
+                                   //if(helloTvXlet.score1==0) helloTvXlet.winner("Speler 2");
+                               }
+                               hit = false;
+                           }
+                       }
+                       else // normale steen verplaatsen
+                       {
+                           moves(player2Array, player1Array, -1); // verplaats steen
+
+                           if(hit)
+                           { // Score player 2 verhogen
                                helloTvXlet.addScorePlayer2();
+                               hit = false;
                                //if(helloTvXlet.score1==0) helloTvXlet.winner("Speler 2");
                            }
-                           hit = false;
-                       }
+                           if(cury==0)
+                           {
+                               helloTvXlet.changeMessage("Speler 2 heeft een dam!");
+                               player2Array[curx][cury] = 2;
+                           }
+                       } 
                    }
-                   else // normale steen verplaatsen
-                   {
-                       moves(player2Array, player1Array, -1); // verplaats steen
-
-                       if(hit)
-                       { // Score player 2 verhogen
-                           helloTvXlet.addScorePlayer2();
-                           hit = false;
-                           //if(helloTvXlet.score1==0) helloTvXlet.winner("Speler 2");
-                       }
-                       if(cury==0)
-                       {
-                           helloTvXlet.changeMessage("Speler 2 heeft een dam!");
-                           player2Array[curx][cury] = 2;
-                       }
-                   } 
                }
            }
+           
            this.repaint();
        }
     }
@@ -523,12 +536,12 @@ public class ChessBoard extends HComponent implements UserEventListener {
                    }
                    else if(curx==takenX && cury==takenY) // Damstuk toch op de zelfde plaats willen laten staan
                    {
-                       helloTvXlet.changeMessage("Je mag enkel op dezelfde plaats staan als je niet anders kan.");
                        if(freeSpaceAroundPiece(curx,cury)==false)
                        {
                            ownArray[curx][cury] = 1;
                            taken = false;
                        }
+                       else helloTvXlet.changeMessage("Je mag enkel op dezelfde plaats staan als je niet anders kan.");
                    }
                } 
            }
@@ -801,25 +814,34 @@ public class ChessBoard extends HComponent implements UserEventListener {
     }
     
     // Kijkt of de vakjes rond de meegegeven coordinaten leeg zijn
-    // Als offset 1 is dan 
     // Return true --> er zijn nog plaatsen waar de damsteen kan staan
     // Return false --> de damsteen kan nergens staan
     public boolean freeSpaceAroundPiece(int x, int y)
     {
-        if(turnPlayer==1)
+        boolean freeSpace = false;
+        if(turnPlayer==1) // speler 1 kan enkel naar onder
         {
-            if((player1Array[x-1][y+1]==1 || player2Array[x-1][y+1]==1) && (player1Array[x+1][y+1]==1 || player2Array[x+1][y+1]==1))
+            if(x<9&&y<9)  // rechts onder
             {
-                return false;
+                if(player1Array[x+1][y+1]==0 && player2Array[x+1][y+1]==0) freeSpace = true;
+            }
+            if(x>0 && y<9) // links onder
+            {
+                if(player1Array[x-1][y+1]==0 && player2Array[x-1][y+1]==0) freeSpace = true;
             }
         }
-        else if(turnPlayer==2)
+        else if(turnPlayer==2) // speler 2 kan enkel naar boven
         {
-            if((player1Array[x-1][y-1]==1 || player2Array[x-1][y-1]==1) && (player1Array[x+1][y-1]==1 || player2Array[x+1][y-1]==1))
+            if(x>0&&y>0)  // links boven
             {
-                return false;
+               if(player1Array[x-1][y-1]==0 && player2Array[x-1][y-1]==0) freeSpace = true;
+            }
+            if(x<9 && y>0) // rechts boven
+            {
+                if(player1Array[x+1][y-1]==0 && player2Array[x+1][y-1]==0) freeSpace = true;
             }
         }
-        return true;
+        
+        return freeSpace;
     }
 }

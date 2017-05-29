@@ -59,18 +59,17 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
       scorePlayer2.setLocation(585,440);
       scorePlayer2.setSize(100,40);
      
-      gameMessage = new HStaticText("Welkom! Speler 1 mag het spel beginnen.");
+      gameMessage = new HStaticText("Welkom!");
       gameMessage.setLocation(50,5);
       gameMessage.setSize(650,40);
       gameMessage.setBackground(new DVBColor(1,255,1,100));
       gameMessage.setBackgroundMode(HVisible.BACKGROUND_FILL);
       
-      winnerScreen = new HStaticText("");
+      winnerScreen = new HStaticText("Druk op enter om stenen op te pakken\n en neer te zetten.\nGebruik de pijltjes toetsen om te bewegen.\n\nBeide spelers beginnen met een totaal van \n20 punten, dit zijn het aantal stenen\nop het veld van die speler.\nAls een speler geen stenen meer heeft\nis hij verloren.\n\nDruk op Enter om het spel te beginnen!");
       winnerScreen.setLocation(50,50);
       winnerScreen.setSize(500,500);
       winnerScreen.setBackground(new DVBColor(1,100,1,200));
-      winnerScreen.setBackgroundMode(HVisible.NO_BACKGROUND_FILL);
-      
+      winnerScreen.setBackgroundMode(HVisible.BACKGROUND_FILL);
  
       scene.add(winnerScreen);
       scene.add(gameMessage);
@@ -94,6 +93,13 @@ public class HelloTVXlet extends HComponent implements Xlet, HActionListener {
     public boolean getGameOver()
     {
         return gameover;
+    }
+    
+    public void stopBeginScreen()
+    {
+        winnerScreen.setTextContent("", HVisible.NORMAL_STATE);
+        winnerScreen.setBackgroundMode(HVisible.NO_BACKGROUND_FILL);
+        gameMessage.setTextContent("Speler 1 mag het spel beginnen.", HVisible.NORMAL_STATE);
     }
     
     public void winner(java.lang.String winner)
