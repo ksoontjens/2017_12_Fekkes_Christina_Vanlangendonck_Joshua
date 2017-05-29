@@ -120,12 +120,12 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         else if(player1Array[x][y]==2) // dam stenen worden vierkant
                         {
                             g.setColor(Color.BLUE);
-                            g.fillRect(x*50+xoff, y*50+xoff, 40, 40);
+                            g.fillRect(x*50+xoff+4, y*50+xoff+4, 40, 40);
                         }
                         else // gewone stenen van speler 1 worden blauw
                         {
                              g.setColor(Color.BLUE);
-                             g.fillOval(x*50+xoff, y*50+xoff, 40, 40);
+                             g.fillOval(x*50+xoff+4, y*50+xoff+4, 40, 40);
                         }
                     }
                     else if(player2Array[x][y] !=0)
@@ -141,17 +141,16 @@ public class ChessBoard extends HComponent implements UserEventListener {
                         else if(player2Array[x][y]==2) //dam stenen worden vierkant
                         {
                             g.setColor(Color.RED);
-                            g.fillRect(x*50+xoff, y*50+xoff, 40, 40);
+                            g.fillRect(x*50+xoff+4, y*50+xoff+4, 40, 40);
                         }
                         else // gewone stenen van player 2 worden rood
                         {
                             g.setColor(Color.RED);
-                            g.fillOval((x*50+xoff), y*50+xoff, 40, 40);
+                            g.fillOval(x*50+xoff+4, y*50+xoff+4, 40, 40);
                         }
-                       
                     }
-                } 
-            }     
+                }
+            }    
         }
         g.setColor(Color.GREEN);
         g.drawRect(curx*50+xoff, cury*50+yoff, 50, 50); //teken selectievakje
